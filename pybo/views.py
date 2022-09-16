@@ -1,8 +1,16 @@
-from django.shortcuts import render
-
 # Create your views here.
-from django.http import HttpResponse
+from django.shortcuts import render
+from .models import Question, Answer
 
 
 def index(request):
-    return HttpResponse("안녕하세요 pybo에 오신 것을 환영합니다.")
+    question_list = Question.objects.order_by('-create_date')
+    content = {"question_list": question_list}
+    return render(request, 'pybo/question_list.html', content)
+
+
+def detail(request, question_id):
+    question = Question.objects.get(id=question_id)
+    content = {'question': question}
+    return render(request, 'pybo/question_detail.html', content)
+
