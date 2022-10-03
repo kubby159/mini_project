@@ -80,3 +80,13 @@ def question_modify(request, question_id):
         form = QuestionForm(instance=question)
     context = {'form': form}
     return render(request, 'pybo/question_form.html', context)
+
+
+@login_required(login_url='common:login')
+def answer_delete(request, answer_id):
+    answer = get_object_or_404(Answer, pk=answer_id)
+    if request.user != answer.author:
+        messages.error(request, '삭제권한이 없습니다')
+    else:
+        answer.delete()
+    return redirect('pybo:detail', question_id=answer.question.id)
